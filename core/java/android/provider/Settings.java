@@ -4896,6 +4896,12 @@ public final class Settings {
          */
         public static final String POWERMENU_BACKGROUND_BLUR_INTENSITY = "powermenu_background_blur_intensity";
 
+	 /**
+         * Whether the haptic feedback on action instead of touch
+         * @hide
+         */
+        public static final String HAPTIC_ON_ACTION_KEY = "haptic_on_action_key";
+
         /**
          * Full battery charging color
          * @hide
