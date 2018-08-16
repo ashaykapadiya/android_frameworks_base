@@ -4701,6 +4701,15 @@ public final class Settings {
         public static final String FOD_ICON = "fod_icon";
 
         /**
+         * @hide
+         */
+        public static final String FORCE_SHOW_NAVBAR = "navigation_bar_show_new";
+
+        /** @hide */
+        private static final Validator FORCE_SHOW_NAVBAR_VALIDATOR =
+                ANY_INTEGER_VALIDATOR;
+
+        /**
          * FOD use wallpaper color
          * @hide
          */
@@ -5582,6 +5591,7 @@ public final class Settings {
             HEADS_UP_TIMEOUT,
             PULSE_AMBIENT_LIGHT,
             PULSE_AMBIENT_LIGHT_COLOR,
+            FORCE_SHOW_NAVBAR,
             NAVIGATION_HANDLE_WIDTH,
             BACK_GESTURE_HEIGHT,
             HIDE_SMART_REPLIES,
@@ -5752,6 +5762,7 @@ public final class Settings {
             PRIVATE_SETTINGS.add(LOCK_TO_APP_ENABLED);
             PRIVATE_SETTINGS.add(EGG_MODE);
             PRIVATE_SETTINGS.add(DISPLAY_COLOR_MODE);
+            PRIVATE_SETTINGS.add(FORCE_SHOW_NAVBAR);
             PRIVATE_SETTINGS.add(NAVIGATION_HANDLE_WIDTH);
             PRIVATE_SETTINGS.add(BUTTON_BACKLIGHT_TIMEOUT);
             PRIVATE_SETTINGS.add(BUTTON_BACKLIGHT_ONLY_WHEN_PRESSED);
@@ -5969,6 +5980,7 @@ public final class Settings {
             VALIDATORS.put(ALLOW_INCALL_HOME, ALLOW_INCALL_HOME_VALIDATOR);
             VALIDATORS.put(ANBI_ENABLED_OPTION, ANBI_ENABLED_OPTION_VALIDATOR);
             VALIDATORS.put(SHOW_MEDIA_HEADS_UP, SHOW_MEDIA_HEADS_UP_VALIDATOR);
+            VALIDATORS.put(FORCE_SHOW_NAVBAR, FORCE_SHOW_NAVBAR_VALIDATOR);
         }
 
         /**
