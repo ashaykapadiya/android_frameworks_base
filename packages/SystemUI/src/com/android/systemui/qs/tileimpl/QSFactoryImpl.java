@@ -38,6 +38,7 @@ import com.android.systemui.qs.tiles.DataSaverTile;
 import com.android.systemui.qs.tiles.DataSwitchTile;
 import com.android.systemui.qs.tiles.DndTile;
 import com.android.systemui.qs.tiles.FlashlightTile;
+import com.android.systemui.qs.tiles.GamingModeTile;
 import com.android.systemui.qs.tiles.HeadsUpTile;
 import com.android.systemui.qs.tiles.HotspotTile;
 import com.android.systemui.qs.tiles.HWKeysTile;
@@ -94,6 +95,7 @@ public class QSFactoryImpl implements QSFactory {
     private final Provider<SmartPixelsTile> mSmartPixelsTileProvider;
     private final Provider<SoundTile> mSoundTileProvider;
     private final Provider<HWKeysTile> mHWKeysTileProvider;
+    private final Provider<GamingModeTile> mGamingModeTileProvider;
 
     private QSTileHost mHost;
 
@@ -125,7 +127,8 @@ public class QSFactoryImpl implements QSFactory {
             Provider<DataSwitchTile> dataSwitchTileProvider,
             Provider<SmartPixelsTile> smartPixelsTileProvider,
             Provider<SoundTile> soundTileProvider,
-            Provider<HWKeysTile> hWKeysTileProvider) {
+            Provider<HWKeysTile> hWKeysTileProvider,
+            Provider<GamingModeTile> gamingModeTileProvider) {
         mWifiTileProvider = wifiTileProvider;
         mBluetoothTileProvider = bluetoothTileProvider;
         mCellularTileProvider = cellularTileProvider;
@@ -154,6 +157,7 @@ public class QSFactoryImpl implements QSFactory {
         mSmartPixelsTileProvider = smartPixelsTileProvider;
         mSoundTileProvider = soundTileProvider;
         mHWKeysTileProvider = hWKeysTileProvider;
+        mGamingModeTileProvider = gamingModeTileProvider;
     }
 
     public void setHost(QSTileHost host) {
@@ -227,6 +231,8 @@ public class QSFactoryImpl implements QSFactory {
                 return mSoundTileProvider.get();
             case "hwkeys":
                 return mHWKeysTileProvider.get();
+            case "gaming":
+                return mGamingModeTileProvider.get();
         }
 
         // Intent tiles.
