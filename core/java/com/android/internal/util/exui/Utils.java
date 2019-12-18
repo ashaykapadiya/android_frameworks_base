@@ -28,26 +28,18 @@ import android.content.res.Resources;
 import android.hardware.fingerprint.FingerprintManager;
 import android.hardware.input.InputManager;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.PowerManager;
-import android.os.RemoteException;
-import android.os.ServiceManager;
 import android.os.SystemProperties;
 import android.os.SystemClock;
 import android.os.UserHandle;
 import android.provider.Settings; 
 import android.text.format.Time;
 import android.view.InputDevice;
-import android.view.IWindowManager;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
-import android.view.WindowManagerGlobal;
 
 import com.android.internal.R;
-import com.android.internal.statusbar.IStatusBarService;
-import android.util.DisplayMetrics;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -61,8 +53,6 @@ public class Utils {
 
     private static OverlayManager sOverlayService;
 
-    public static final String INTENT_SCREENSHOT = "action_handler_screenshot";
-    public static final String INTENT_REGION_SCREENSHOT = "action_handler_region_screenshot";
 
     // Check to see if device is WiFi only
     public static boolean isWifiOnly(Context context) {
@@ -102,16 +92,21 @@ public class Utils {
 
     // Check to see if device supports the Fingerprint scanner
     public static boolean hasFingerprintSupport(Context context) {
-        FingerprintManager fingerprintManager = (FingerprintManager) context.getSystemService(Context.FINGERPRINT_SERVICE);
-        return context.getApplicationContext().checkSelfPermission(Manifest.permission.USE_FINGERPRINT) == PackageManager.PERMISSION_GRANTED &&
+               FingerprintManager fingerprintManager = (FingerprintManager) context.getSystemService(
+                Context.FINGERPRINT_SERVICE);
+        return context.getApplicationContext().checkSelfPermission(
+                Manifest.permission.USE_FINGERPRINT) == PackageManager.PERMISSION_GRANTED &&
                 (fingerprintManager != null && fingerprintManager.isHardwareDetected());
     }
 
     // Check to see if device not only supports the Fingerprint scanner but also if is enrolled
     public static boolean hasFingerprintEnrolled(Context context) {
-        FingerprintManager fingerprintManager = (FingerprintManager) context.getSystemService(Context.FINGERPRINT_SERVICE);
-        return context.getApplicationContext().checkSelfPermission(Manifest.permission.USE_FINGERPRINT) == PackageManager.PERMISSION_GRANTED &&
-                (fingerprintManager != null && fingerprintManager.isHardwareDetected() && fingerprintManager.hasEnrolledFingerprints());
+        FingerprintManager fingerprintManager = (FingerprintManager) context.getSystemService(
+                Context.FINGERPRINT_SERVICE);
+        return context.getApplicationContext().checkSelfPermission(
+                Manifest.permission.USE_FINGERPRINT) == PackageManager.PERMISSION_GRANTED &&
+                (fingerprintManager != null && fingerprintManager.isHardwareDetected() &&
+                        fingerprintManager.hasEnrolledFingerprints());
     }
 
     // Check to see if device has a camera
@@ -146,49 +141,13 @@ public class Utils {
 
     // Check for Chinese language
     public static boolean isChineseLanguage() {
-       return Resources.getSystem().getConfiguration().locale.getLanguage().startsWith(
-               Locale.CHINESE.getLanguage());
+        return Resources.getSystem().getConfiguration().locale.getLanguage().startsWith(
+                Locale.CHINESE.getLanguage());
     }
 
-    // Method to turn off the screen
-    public static void switchScreenOff(Context ctx) {
-        PowerManager pm = (PowerManager) ctx.getSystemService(Context.POWER_SERVICE);
-        if (pm!= null) {
-            pm.goToSleep(SystemClock.uptimeMillis());
-        }
-    }
-
+    // Method to check if device supports flashlight
     public static boolean deviceHasFlashlight(Context ctx) {
         return ctx.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
-    }
-
-    public static void toggleCameraFlash() {
-        FireActions.toggleCameraFlash();
-    }
-
-    private static final class FireActions {
-        private static IStatusBarService mStatusBarService = null;
-
-        private static IStatusBarService getStatusBarService() {
-            synchronized (FireActions.class) {
-                if (mStatusBarService == null) {
-                    mStatusBarService = IStatusBarService.Stub.asInterface(
-                            ServiceManager.getService("statusbar"));
-                }
-                return mStatusBarService;
-            }
-        }
-
-        public static void toggleCameraFlash() {
-            IStatusBarService service = getStatusBarService();
-            if (service != null) {
-                try {
-                    service.toggleCameraFlash();
-                } catch (RemoteException e) {
-                    // do nothing.
-                }
-            }
-        }
     }
 
     // Method to detect if device has DASH support.
@@ -229,15 +188,6 @@ public class Utils {
                         InputManager.INJECT_INPUT_EVENT_MODE_ASYNC);
             }
         }, 20);
-    }
-
-    public static void takeScreenshot(boolean full) {
-        IWindowManager wm = WindowManagerGlobal.getWindowManagerService();
-        try {
-            wm.sendCustomAction(new Intent(full? INTENT_SCREENSHOT : INTENT_REGION_SCREENSHOT));
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
     }
 
     // Check if device has a notch
