@@ -715,6 +715,7 @@ public class StatusBar extends SystemUI implements DemoMode,
 
         mUiModeManager = mContext.getSystemService(UiModeManager.class);
         mKeyguardViewMediator = getComponent(KeyguardViewMediator.class);
+        mNavigationBarSystemUiVisibility = mNavigationBarController.createSystemUiVisibility();
         mActivityIntentHelper = new ActivityIntentHelper(mContext);
         final KeyguardSliceProvider sliceProvider = KeyguardSliceProvider.getAttachedInstance();
         if (sliceProvider != null) {
@@ -972,7 +973,7 @@ public class StatusBar extends SystemUI implements DemoMode,
         mNotificationLogger.setHeadsUpManager(mHeadsUpManager);
         putComponent(HeadsUpManager.class, mHeadsUpManager);
 
-        updateNavigationBar(true);
+        updateNavigationBar(result, true);
 
         if (ENABLE_LOCKSCREEN_WALLPAPER && mWallpaperSupported) {
             mLockscreenWallpaper = new LockscreenWallpaper(mContext, this, mHandler);
@@ -2382,6 +2383,16 @@ public class StatusBar extends SystemUI implements DemoMode,
         if (displayId != mDisplayId) {
             return;
         }
+
+        mNavigationBarSystemUiVisibility.displayId = displayId;
+        mNavigationBarSystemUiVisibility.vis = vis;
+        mNavigationBarSystemUiVisibility.fullscreenStackVis = fullscreenStackVis;
+        mNavigationBarSystemUiVisibility.dockedStackVis = dockedStackVis;
+        mNavigationBarSystemUiVisibility.mask = mask;
+        mNavigationBarSystemUiVisibility.fullscreenStackBounds = fullscreenStackBounds;
+        mNavigationBarSystemUiVisibility.dockedStackBounds = dockedStackBounds;
+        mNavigationBarSystemUiVisibility.navbarColorManagedByIme = navbarColorManagedByIme;
+
         final int oldVal = mSystemUiVisibility;
         final int newVal = (oldVal&~mask) | (vis&mask);
         final int diff = newVal ^ oldVal;
@@ -4189,7 +4200,7 @@ public class StatusBar extends SystemUI implements DemoMode,
             } else if (uri.equals(Settings.Secure.getUriFor(Settings.Secure.LOCKSCREEN_DATE_SELECTION))) {
                 updateKeyguardStatusSettings();
             } else if (uri.equals(Settings.System.getUriFor(Settings.System.FORCE_SHOW_NAVBAR))) {
-                updateNavigationBar(false);
+                 updateNavigationBar(getRegisterStatusBarResult(), false);
             }
             update();
         }
@@ -4783,6 +4794,7 @@ public class StatusBar extends SystemUI implements DemoMode,
             Dependency.get(DeviceProvisionedController.class);
 
     protected NavigationBarController mNavigationBarController;
+    private NavigationBarController.SystemUiVisibility mNavigationBarSystemUiVisibility;
 
     // UI-specific methods
 
@@ -5149,16 +5161,26 @@ public class StatusBar extends SystemUI implements DemoMode,
         }
     }
 
-    private void updateNavigationBar(boolean init) {
+    private RegisterStatusBarResult getRegisterStatusBarResult() {
+        RegisterStatusBarResult result = null;
+        try {
+            result = mBarService.registerStatusBar(mCommandQueue);
+        } catch (RemoteException ex) {
+            ex.rethrowFromSystemServer();
+        }
+        return result;
+    }
+
+    private void updateNavigationBar(@Nullable RegisterStatusBarResult result, boolean init) {
         boolean showNavBar = Utils.deviceSupportNavigationBar(mContext);
         if (init) {
             if (showNavBar) {
-                mNavigationBarController.createNavigationBars(true, null);
+                mNavigationBarController.createNavigationBars(true, result);
             }
         } else {
             if (showNavBar != mShowNavBar) {
                 if (showNavBar) {
-                    mNavigationBarController.createNavigationBars(true, null);
+                    mNavigationBarController.recreateNavigationBars(true, result, mNavigationBarSystemUiVisibility);
                 } else {
                     mNavigationBarController.removeNavigationBar(mDisplayId);
                 }
