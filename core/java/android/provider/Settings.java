@@ -5494,6 +5494,15 @@ public final class Settings {
 
 
         /**
+         * Whether to show heads up on new music tracks
+         * @hide
+         */
+        public static final String SHOW_MEDIA_HEADS_UP = "show_media_heads_up";
+        /** @hide */
+        private static final Validator SHOW_MEDIA_HEADS_UP_VALIDATOR =
+                BOOLEAN_VALIDATOR;
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
@@ -5613,6 +5622,7 @@ public final class Settings {
             NOTIFICATION_GUTS_KILL_APP_BUTTON,
             ALLOW_INCALL_HOME,
             ANBI_ENABLED_OPTION,
+            SHOW_MEDIA_HEADS_UP,
         };
 
         /**
@@ -5946,6 +5956,7 @@ public final class Settings {
             VALIDATORS.put(NOTIFICATION_GUTS_KILL_APP_BUTTON, NOTIFICATION_GUTS_KILL_APP_BUTTON_VALIDATOR);
             VALIDATORS.put(ALLOW_INCALL_HOME, ALLOW_INCALL_HOME_VALIDATOR);
             VALIDATORS.put(ANBI_ENABLED_OPTION, ANBI_ENABLED_OPTION_VALIDATOR);
+            VALIDATORS.put(SHOW_MEDIA_HEADS_UP, SHOW_MEDIA_HEADS_UP_VALIDATOR);
         }
 
         /**
