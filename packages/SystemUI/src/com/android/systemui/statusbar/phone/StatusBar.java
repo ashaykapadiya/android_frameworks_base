@@ -141,7 +141,6 @@ import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.nano.MetricsProto.MetricsEvent;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.statusbar.RegisterStatusBarResult;
-import com.android.internal.util.evolution.EvolutionUtils;
 import com.android.internal.util.hwkeys.ActionConstants;
 import com.android.internal.util.hwkeys.ActionUtils;
 import com.android.internal.util.hwkeys.PackageMonitor;
