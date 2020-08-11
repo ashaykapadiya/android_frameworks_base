@@ -218,6 +218,7 @@ import com.android.internal.policy.PhoneWindow;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.exui.Utils;
+import com.android.internal.util.exui.ActionUtils;
 import com.android.internal.util.ScreenShapeHelper;
 import com.android.internal.util.hwkeys.ActionHandler;
 import com.android.internal.util.hwkeys.ActionUtils;
@@ -843,7 +844,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 case MSG_TOGGLE_TORCH:
                     performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, true,
                             "Power - Long Press - Torch");
-                    Utils.toggleCameraFlash();
+                    ActionUtils.toggleCameraFlash();
                     break;
                 case HardkeyActionHandler.MSG_FIRE_HOME:
                     launchHomeFromHotKey(DEFAULT_DISPLAY);
@@ -1408,7 +1409,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 if ((mTorchActionMode == 1) && (!isScreenOn() || isDozeMode())) {
                     performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, true,
                             "Power - Long Press - Torch");
-                    Utils.toggleCameraFlash();
+                    ActionUtils.toggleCameraFlash();
                 }
                 break;
             case MULTI_PRESS_POWER_THEATER_MODE:
@@ -6271,13 +6272,13 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     public void sendCustomAction(Intent intent) {
         String action = intent.getAction();
         if (action != null) {
-            if (Utils.INTENT_SCREENSHOT.equals(action)) {
+            if (ActionUtils.INTENT_SCREENSHOT.equals(action)) {
                 mContext.enforceCallingOrSelfPermission(Manifest.permission.ACCESS_SURFACE_FLINGER,
                         TAG + "sendCustomAction permission denied");
                 mHandler.removeCallbacks(mScreenshotRunnable);
                 mScreenshotRunnable.setScreenshotType(TAKE_SCREENSHOT_FULLSCREEN);
                 mHandler.post(mScreenshotRunnable);
-            } else if (Utils.INTENT_REGION_SCREENSHOT.equals(action)) {
+            } else if (ActionUtils.INTENT_REGION_SCREENSHOT.equals(action)) {
                 mContext.enforceCallingOrSelfPermission(Manifest.permission.ACCESS_SURFACE_FLINGER,
                         TAG + "sendCustomAction permission denied");
                 mHandler.removeCallbacks(mScreenshotRunnable);
@@ -6804,6 +6805,21 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             case NavbarUtilities.KEY_ACTION_SPLIT_SCREEN:
                 NavbarUtilities.toggleSplitScreen();
                 break;
+            case NavbarUtilities.KEY_ACTION_FLASHLIGHT:
+                toggleFlashLight();
+                break;
+            case NavbarUtilities.KEY_ACTION_CLEAR_NOTIFICATIONS:
+                toggleClearNotifications();
+                break;
+            case NavbarUtilities.KEY_ACTION_VOLUME_PANEL:
+                toggleVolumePanel();
+                break;
+            case NavbarUtilities.KEY_ACTION_SCREEN_OFF:
+                toggleScreenOff();
+                break;
+            case NavbarUtilities.KEY_ACTION_SCREENSHOT:
+                toggleScreenshot();
+                break;
         }
     }
 
@@ -6857,5 +6873,35 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         } catch (RemoteException|NullPointerException e) {
             // no-op
         }
+    }
+
+    // Flashlight
+    private void toggleFlashLight() {
+        performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, true, "Flashlight toggle");
+        ActionUtils.toggleCameraFlash();
+    }
+
+    // Clear notifications
+    private void toggleClearNotifications() {
+        performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, true, "Clear-all notifications");
+        ActionUtils.clearAllNotifications();
+    }
+
+    // Volume panel
+    private void toggleVolumePanel() {
+        performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, true, "Volume panel");
+        ActionUtils.toggleVolumePanel(mContext);
+    }
+
+    // Screen off
+    private void toggleScreenOff() {
+        performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, true, "Screen off");
+        ActionUtils.switchScreenOff(mContext);
+    }
+
+    // Screenshot
+    private void toggleScreenshot() {
+        performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, true, "Screenshot");
+        ActionUtils.takeScreenshot(true);
     }
 }
