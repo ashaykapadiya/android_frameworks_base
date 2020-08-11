@@ -62,6 +62,7 @@ import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.nano.MetricsProto.MetricsEvent;
 import com.android.internal.util.exui.Utils;
+import com.android.internal.util.exui.ActionUtils;
 import com.android.keyguard.KeyguardClockSwitch;
 import com.android.keyguard.KeyguardStatusView;
 import com.android.keyguard.KeyguardUpdateMonitor;
@@ -493,7 +494,7 @@ public class NotificationPanelView extends PanelView implements
         mDoubleTapGesture = new GestureDetector(mContext, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onDoubleTap(MotionEvent e) {
-                Utils.switchScreenOff(context);
+                ActionUtils.switchScreenOff(context);
                 // quick pulldown can trigger those values
                 // on double tap - so reset them
                 mQsExpandImmediate = false;
@@ -506,7 +507,7 @@ public class NotificationPanelView extends PanelView implements
                 new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onDoubleTap(MotionEvent e) {
-                Utils.switchScreenOff(context);
+                ActionUtils.switchScreenOff(context);
                 return true;
             }
         });
